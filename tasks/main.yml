@@ -1,0 +1,25 @@
+---
+# tasks file for elasticsearch
+- name: Install OpenJDK
+  pacman:
+    name: jdk-openjdk
+    state: present
+- name: Install package
+  pacman:
+    name: elasticsearch
+    state: present
+- name: Set elasticsearch.yml
+  template:
+    src: templates/elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+    mode: 0640
+    owner: root
+    group: elasticsearch
+  notify: Restart elasticsearch
+- name: Test keystore
+  stat:
+    path: /usr/share/elasticsearch/config/elasticsearch.keystore
+  register: __keystore
+- name: Init keystore
+  command: elasticsearch-keystore create
+  when: not __keystore.stat.exists

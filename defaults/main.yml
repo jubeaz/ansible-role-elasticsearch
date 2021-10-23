@@ -1,0 +1,4 @@
+---
+# defaults file for elasticsearch
+es_cl_name: my-cluster
+es_nd_name: mynode
