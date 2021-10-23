@@ -11,3 +11,5 @@ es_ufw_from: 127.0.0.1
 
 es_seed_hosts: []
   #es_seed_hosts: ["name:port"]
+
+es_heap_space: 3g

@@ -14,6 +14,17 @@
     owner: root
     group: elasticsearch
       #  notify: Restart elasticsearch
+- name: Set Xms
+  lineinfile:
+    path: /etc/elasticsearch/jvm.options
+    regexp: '^-Xms'
+    line: "-Xms{{ es_heap_space }}"
+- name: Set Xmx
+  lineinfile:
+    path: /etc/elasticsearch/jvm.options
+    regexp: '^-Xmx'
+    line: "-Xmx{{ es_heap_space }}"
+
 - name: Test keystore
   stat:
     path: /usr/share/elasticsearch/config/elasticsearch.keystore
