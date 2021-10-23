@@ -1,4 +1,13 @@
 ---
 # defaults file for elasticsearch
 es_cl_name: my-cluster
-es_nd_name: mynode
+es_nd_name: "{{ ansible_nodename }}"
+es_data: /var/lib/elasticsearch
+es_logs: /var/log/elasticsearch
+
+es_port: 9200
+es_host: 127.0.0.1
+es_ufw_from: 127.0.0.1
+
+es_seed_hosts: []
+  #es_seed_hosts: ["name:port"]

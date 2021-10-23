@@ -1,0 +1,9 @@
+---
+- name: Install OpenJDK
+  pacman:
+    name: jdk-openjdk
+    state: present
+- name: Install elasticsearch
+  pacman:
+    name: elasticsearch
+    state: present

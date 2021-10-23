@@ -1,13 +1,11 @@
 ---
 # tasks file for elasticsearch
-- name: Install OpenJDK
-  pacman:
-    name: jdk-openjdk
-    state: present
-- name: Install package
-  pacman:
-    name: elasticsearch
-    state: present
+- include_tasks: asserts.yml
+- include_tasks: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+- include_tasks: arch.yml
+  when: ansible_distribution == "Archlinux"
+
 - name: Set elasticsearch.yml
   template:
     src: templates/elasticsearch.yml.j2
@@ -15,7 +13,7 @@
     mode: 0640
     owner: root
     group: elasticsearch
-  notify: Restart elasticsearch
+      #  notify: Restart elasticsearch
 - name: Test keystore
   stat:
     path: /usr/share/elasticsearch/config/elasticsearch.keystore
@@ -23,3 +21,14 @@
 - name: Init keystore
   command: elasticsearch-keystore create
   when: not __keystore.stat.exists
+
+- name: Get installed packages
+  package_facts:
+    manager: "auto"
+- name: open firwall port for elasticsearch
+  ufw:
+    rule: allow
+    direction: in
+    src: "{{ es_ufw_from }}"
+    to_port: "{{ es_port }}"
+  when: "'ufw' in ansible_facts.packages"

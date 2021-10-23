@@ -1,0 +1,11 @@
+---
+- name: Install OpenJDK
+  apt:
+    name: jdk-openjdk
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+- name: Install elasticsearch
+  apt:
+    name: elasticsearch
+    state: present
