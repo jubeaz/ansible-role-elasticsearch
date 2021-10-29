@@ -6,6 +6,29 @@
 - include_tasks: arch.yml
   when: ansible_distribution == "Archlinux"
 
+- name: Assert data directory exist
+  file:
+    path: "{{ es_data }}"
+    group: elasticsearch
+    owner: elasticsearch
+    mode: 0755
+    state: directory
+- name: Assert log directory exist
+  file:
+    path: "{{ es_logs }}"
+    owner: elasticsearch
+    group: elasticsearch
+    mode: 0755
+    state: directory
+- name: Set ES_PATH_CONF
+  lineinfile:
+    path: /etc/default/elasticsearch
+    regexp: '^ES_PATH_CONF='
+    line: 'ES_PATH_CONF=/etc/elasticsearch'
+- name: debug 1
+  debug:
+    #    msg: "{{ groups['test_server'] |join(', ') }}"
+    msg: "" 
 - name: Set elasticsearch.yml
   template:
     src: templates/elasticsearch.yml.j2
@@ -13,7 +36,7 @@
     mode: 0640
     owner: root
     group: elasticsearch
-      #  notify: Restart elasticsearch
+  notify: Restart elasticsearch
 - name: Set Xms
   lineinfile:
     path: /etc/elasticsearch/jvm.options
@@ -27,10 +50,10 @@
 
 - name: Test keystore
   stat:
-    path: /usr/share/elasticsearch/config/elasticsearch.keystore
+    path: /etc/elasticsearch/elasticsearch.keystore
   register: __keystore
 - name: Init keystore
-  command: elasticsearch-keystore create
+  command: "{{ es_bin_path }}/elasticsearch-keystore create"
   when: not __keystore.stat.exists
 
 - name: Get installed packages

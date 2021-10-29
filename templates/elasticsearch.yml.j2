@@ -1,7 +1,8 @@
 {{ ansible_managed | comment }}
-cluster.name: {{ es_cl_name }}
+cluster.name: {{ es_cluster_name }}
 
-node.name: {{ es_nd_name }}
+
+node.name: {{ es_node_name }}
 # Add custom attributes to the node:
 #node.attr.rack: r1
 
@@ -14,14 +15,26 @@ path.logs: {{ es_logs }}
 #bootstrap.memory_lock: true
 
 # Set the bind address to a specific IP (IPv4 or IPv6):
-network.host: {{ es_host }}
+{% if es_deployment_type == "developement" %}
+#network.host: {{ es_host }}
+{% endif %}
 # Set a custom port for HTTP:
 http.port: {{ es_port }}
 
+
 # Pass an initial list of hosts to perform discovery when this node is started:
-discovery.seed_hosts: {{ es_seed_hosts }}
+{% if es_deployment_type == "developement" %}
+#discovery.seed_hosts: {{ es_seed_hosts }}
+{% endif %}
+
 # Bootstrap the cluster using an initial set of master-eligible nodes:
-#cluster.initial_master_nodes: ["node-1", "node-2"]
+{% if es_deployment_type == "developement" %}
+#cluster.initial_master_nodes: []
+{% endif %}
+
+#{% if es_init_master_method == "var" %}
+#cluster.initial_master_nodes: ["{{ es_master_list | join('", "')}}"]
+{% endif %}
 
 # Block initial recovery after a full cluster restart until N nodes are started:
 #gateway.recover_after_nodes: 3

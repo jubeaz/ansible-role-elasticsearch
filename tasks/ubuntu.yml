@@ -1,11 +1,16 @@
 ---
-- name: Install OpenJDK
-  apt:
-    name: jdk-openjdk
+- name: Add Elasticsearch apt key.
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: Add Elasticsearch repository.
+  apt_repository:
+    repo: 'deb https://artifacts.elastic.co/packages/{{ elasticsearch_version }}/apt stable main'
     state: present
     update_cache: true
-    cache_valid_time: 3600
-- name: Install elasticsearch
-  apt:
+
+- name: Install Elasticsearch.
+  package:
     name: elasticsearch
     state: present
