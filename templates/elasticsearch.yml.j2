@@ -1,34 +1,46 @@
 {{ ansible_managed | comment }}
+
+# ---------------------------------- Cluster -----------------------------------
 cluster.name: {{ es_cluster_name }}
 
+# ------------------------------------ Node ------------------------------------
 
 node.name: {{ es_node_name }}
 # Add custom attributes to the node:
 #node.attr.rack: r1
+
+# ----------------------------------- Paths ------------------------------------
 
 # Path to directory where to store the data (separate multiple locations by comma):
 path.data: {{ es_data }}
 # Path to log files:
 path.logs: {{ es_logs }}
 
+# ----------------------------------- Memory -----------------------------------
+
 # Lock the memory on startup:
 #bootstrap.memory_lock: true
 
+# ---------------------------------- Network -----------------------------------
+
 # Set the bind address to a specific IP (IPv4 or IPv6):
-{% if es_deployment_type == "developement" %}
+{% if es_deployment_type == "development" %}
 #network.host: {{ es_host }}
+{% else %}
+network.host: {{ es_host }}
 {% endif %}
 # Set a custom port for HTTP:
 http.port: {{ es_port }}
 
+# --------------------------------- Discovery ----------------------------------
 
 # Pass an initial list of hosts to perform discovery when this node is started:
-{% if es_deployment_type == "developement" %}
+{% if es_deployment_type == "development" %}
 #discovery.seed_hosts: {{ es_seed_hosts }}
 {% endif %}
 
 # Bootstrap the cluster using an initial set of master-eligible nodes:
-{% if es_deployment_type == "developement" %}
+{% if es_deployment_type == "development" %}
 #cluster.initial_master_nodes: []
 {% endif %}
 
@@ -39,5 +51,10 @@ http.port: {{ es_port }}
 # Block initial recovery after a full cluster restart until N nodes are started:
 #gateway.recover_after_nodes: 3
 
+# ---------------------------------- Various -----------------------------------
+
 # Require explicit names when deleting indices:
 #action.destructive_requires_name: true
+
+# ---------------------------------- Security ----------------------------------
+
