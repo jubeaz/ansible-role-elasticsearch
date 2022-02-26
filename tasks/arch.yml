@@ -3,6 +3,8 @@
   pacman:
     name: jdk-openjdk
     state: present
+  register: __pacman
+  changed_when: __pacman.packages is defined
 
 - name: AUR | get metadata from AurJson api
   uri: >
@@ -50,7 +52,7 @@
   changed_when: false
 
 - name: AUR | {{ _pkg_name }} | install newly-built aur package with pacman
-  when: __aur_makepkg_result.changed == true
+  #when: __aur_makepkg_result.changed == true
   shell: >
     pacman --noconfirm --noprogressbar --needed -U {{ __compiled_package_name.stdout | quote }}
     chdir={{ aur_directory }}/{{ _pkg_name }}
